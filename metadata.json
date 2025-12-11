@@ -1,0 +1,5 @@
+{
+  "name": "IT Quest Inventory",
+  "description": "Sistema de inventario gamificado con login de acertijo.",
+  "requestFramePermissions": []
+}

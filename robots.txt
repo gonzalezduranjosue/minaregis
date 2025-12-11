@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+# IMPORTANTE: Reemplaza la URL de abajo con la dirección real de tu GitHub Pages una vez desplegado
+Sitemap: https://tu-usuario.github.io/tu-repo/sitemap.xml
