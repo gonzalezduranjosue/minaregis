@@ -74,16 +74,6 @@
         }
       }
     </script>
-    <script type="importmap">
-    {
-      "imports": {
-        "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
-        "react/": "https://esm.sh/react@^19.2.2/",
-        "react": "https://esm.sh/react@^19.2.2",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.2/"
-      }
-    }
-    </script>
     <style>
       body {
         background-color: #0d0e15;
@@ -109,9 +99,23 @@
         opacity: 0.15;
       }
     </style>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.2/",
+    "react/": "https://esm.sh/react@^19.2.2/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
+    "vite": "https://esm.sh/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+</head>
   <body>
     <div class="scanlines"></div>
     <div id="root"></div>
+    <!-- Script principal de la aplicación. Esencial para que React cargue. -->
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
