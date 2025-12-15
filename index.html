@@ -70,11 +70,11 @@
   <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
-    "vite": "https://esm.sh/vite@^7.3.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
@@ -95,7 +95,7 @@
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect, useRef } from 'https://esm.sh/react@18.2.0';
       import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
-      import { Terminal, Lock, Skull, Shield, Cpu, Wifi, HardDrive, Monitor, Plus, Trash2, Power, Battery, Save, MapPin, Barcode } from 'https://esm.sh/lucide-react@0.344.0';
+      import { Terminal, Lock, Skull, Shield, Cpu, Wifi, HardDrive, Monitor, Plus, Trash2, Power, Battery, Save, MapPin, Barcode, Download } from 'https://esm.sh/lucide-react@0.344.0';
 
       // --- COMPONENTE: LoginTerminal ---
       const LoginTerminal = ({ onLoginSuccess }) => {
@@ -195,13 +195,34 @@
       ];
 
       const GameDashboard = ({ username, onLogout }) => {
-        const [inventory, setInventory] = useState(INITIAL_LOOT);
+        // Inicializar estado leyendo de LocalStorage si existe
+        const [inventory, setInventory] = useState(() => {
+          const savedData = localStorage.getItem('rpg_inventory_data');
+          return savedData ? JSON.parse(savedData) : INITIAL_LOOT;
+        });
+
         const [showCraftModal, setShowCraftModal] = useState(false);
         const [newItemName, setNewItemName] = useState('');
         const [newItemType, setNewItemType] = useState('PC');
         const [newItemRarity, setNewItemRarity] = useState('common');
         const [newItemLocation, setNewItemLocation] = useState('');
         const [newItemSerialNumber, setNewItemSerialNumber] = useState('');
+
+        // EFECTO: Guardar automáticamente cada vez que cambie el inventario
+        useEffect(() => {
+          localStorage.setItem('rpg_inventory_data', JSON.stringify(inventory));
+        }, [inventory]);
+
+        // FUNCIÓN: Descargar JSON
+        const downloadJSON = () => {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(inventory, null, 2));
+          const downloadAnchorNode = document.createElement('a');
+          downloadAnchorNode.setAttribute("href", dataStr);
+          downloadAnchorNode.setAttribute("download", "inventario_rpg.json");
+          document.body.appendChild(downloadAnchorNode);
+          downloadAnchorNode.click();
+          downloadAnchorNode.remove();
+        };
 
         const addItem = (e) => {
           e.preventDefault();
@@ -223,7 +244,9 @@
         };
 
         const deleteItem = (id) => {
-          setInventory(inventory.filter(item => item.id !== id));
+          if(confirm('¿Confirmar eliminación de este registro?')) {
+            setInventory(inventory.filter(item => item.id !== id));
+          }
         };
 
         const getRarityColor = (rarity) => {
@@ -283,17 +306,26 @@
               </div>
 
               <div className="flex flex-col gap-2">
-                 <button 
-                  onClick={() => setShowCraftModal(true)}
-                  className="flex-1 bg-retro-green hover:bg-green-400 text-black font-pixel text-sm flex items-center justify-center gap-2 rounded border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all"
-                >
-                  <Plus size={16} /> REGISTRAR EQUIPO
-                </button>
+                 <div className="flex gap-2">
+                   <button 
+                    onClick={() => setShowCraftModal(true)}
+                    className="flex-1 bg-retro-green hover:bg-green-400 text-black font-pixel text-xs flex items-center justify-center gap-2 rounded border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all p-2"
+                  >
+                    <Plus size={16} /> REGISTRAR
+                  </button>
+                   <button 
+                    onClick={downloadJSON}
+                    className="flex-1 bg-retro-purple hover:bg-purple-400 text-black font-pixel text-xs flex items-center justify-center gap-2 rounded border-b-4 border-purple-800 active:border-b-0 active:translate-y-1 transition-all p-2"
+                    title="Descargar respaldo JSON"
+                  >
+                    <Download size={16} /> JSON
+                  </button>
+                 </div>
                 <button 
                   onClick={onLogout}
-                  className="h-12 border-2 border-red-500 hover:bg-red-500/10 text-red-500 font-pixel text-xs flex items-center justify-center gap-2 rounded"
+                  className="h-10 border-2 border-red-500 hover:bg-red-500/10 text-red-500 font-pixel text-xs flex items-center justify-center gap-2 rounded"
                 >
-                  <Power size={16} /> CERRAR SESIÓN
+                  <Power size={16} /> SALIR
                 </button>
               </div>
             </div>
@@ -341,7 +373,7 @@
 
                     <button 
                       onClick={() => deleteItem(item.id)}
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 transition-opacity"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 transition-opacity bg-black rounded-full p-1"
                       title="Desmantelar Item"
                     >
                       <Trash2 size={18} />
