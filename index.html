@@ -12,7 +12,7 @@
     <meta name="author" content="Admin Sys" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Canonical URL (Importante: Cámbialo por tu URL real de GitHub Pages) -->
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://tu-usuario.github.io/tu-repo/" />
 
     <!-- Open Graph / Facebook / LinkedIn -->
@@ -24,12 +24,29 @@
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://tu-usuario.github.io/tu-repo/" />
     <meta property="twitter:title" content="Sistema TI // Inventario RPG" />
     <meta property="twitter:description" content="Sistema de gestión de inventario con estética de videojuego retro y acceso por acertijo." />
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- Datos Estructurados JSON-LD (Vital para Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Sistema TI Inventario RPG",
+      "url": "https://tu-usuario.github.io/tu-repo/",
+      "description": "Sistema de inventario gamificado para departamentos de TI.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     
-    <!-- Google Fonts: VT323 (Terminal) and Press Start 2P (Pixel) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -114,8 +131,29 @@
 </head>
   <body>
     <div class="scanlines"></div>
-    <div id="root"></div>
-    <!-- Script principal de la aplicación. Esencial para que React cargue. -->
+    
+    <!-- CONTENIDO PRE-RENDERIZADO PARA SEO -->
+    <!-- Este contenido se muestra antes de que React cargue (útil para bots) y es reemplazado por la App -->
+    <div id="root">
+      <div style="background-color: #0d0e15; min-height: 100vh; color: #4ade80; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;">
+        <h1 style="font-size: 2rem; margin-bottom: 20px;">SISTEMA TI // INVENTARIO RPG</h1>
+        <p style="max-width: 600px; margin-bottom: 20px;">
+          Bienvenido al sistema de gestión de activos TI gamificado. 
+          Resuelve el acertijo de la terminal para acceder al inventario de hardware y software.
+        </p>
+        <div style="font-size: 1.2rem; margin-bottom: 20px;">Cargando interfaz neuronal...</div>
+        
+        <!-- Contenido visible solo si JS está desactivado (Bots antiguos) -->
+        <noscript>
+          <div style="border: 2px solid #ef4444; padding: 20px; color: #ef4444; background: #000;">
+            <strong>ALERTA DE SISTEMA:</strong> JavaScript es requerido para ejecutar esta aplicación.
+            Por favor, habilite JavaScript en su navegador para acceder a la terminal de login.
+          </div>
+        </noscript>
+      </div>
+    </div>
+    
+    <!-- Script principal -->
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
