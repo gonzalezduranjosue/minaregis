@@ -26,6 +26,17 @@
             colors: {
               primary: '#3b82f6', // Blue 500
               secondary: '#64748b', // Slate 500
+            },
+            animation: {
+              'shake': 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
+            },
+            keyframes: {
+              shake: {
+                '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+              }
             }
           }
         }
@@ -59,7 +70,7 @@
       import { 
         LayoutDashboard, Package, Moon, Sun, Upload, Download, 
         Plus, Trash2, Search, Laptop, Monitor, Cpu, Server, 
-        LogOut, MoreHorizontal, FileSpreadsheet, HardDrive 
+        LogOut, MoreHorizontal, FileSpreadsheet, HardDrive, Lock 
       } from 'https://esm.sh/lucide-react@0.344.0';
 
       // --- UTILIDADES ---
@@ -69,43 +80,56 @@
         { id: 3, name: 'Monitor LG Ultrawide', type: 'Periférico', status: 'Mantenimiento', location: 'IT Lab', serialNumber: 'LG-34WN' },
       ];
 
-      // --- COMPONENTE: Login Moderno ---
+      // --- COMPONENTE: Login Moderno Seguro ---
       const LoginPage = ({ onLogin }) => {
         const [username, setUsername] = useState('');
+        const [error, setError] = useState(false);
 
         const handleSubmit = (e) => {
           e.preventDefault();
-          if (username.trim()) onLogin(username);
+          
+          // Validación de seguridad estricta
+          if (username.trim().toLowerCase() === 'joshy') {
+            onLogin('Joshy'); // Normalizamos el nombre al entrar
+          } else {
+            setError(true);
+            setTimeout(() => setError(false), 800); // Quitar estado de error tras la animación
+          }
         };
 
         return (
           <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
-            <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 card-transition">
+            <div className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 card-transition ${error ? 'animate-shake border-2 border-red-500' : ''}`}>
               <div className="text-center mb-8">
-                <div className="bg-blue-100 dark:bg-blue-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
-                  <Package size={32} />
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors ${error ? 'bg-red-100 text-red-500 dark:bg-red-900/30' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'}`}>
+                  {error ? <Lock size={32} /> : <Package size={32} />}
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Inventario TI</h2>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">Ingresa tus credenciales para continuar</p>
+                <p className="text-gray-500 dark:text-gray-400 mt-2">Acceso Restringido</p>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usuario</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usuario Autorizado</label>
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white outline-none transition-all"
-                    placeholder="Ej. Admin"
+                    autoFocus
+                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 outline-none transition-all dark:bg-gray-700 dark:text-white ${error ? 'border-red-500 focus:ring-red-500 text-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'}`}
+                    placeholder="Ingrese su usuario..."
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      setError(false);
+                    }}
                   />
+                  {error && <p className="text-red-500 text-sm mt-2">⛔ Acceso denegado: Usuario no autorizado.</p>}
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg shadow-blue-500/30"
+                  className={`w-full font-semibold py-3 rounded-lg transition-colors shadow-lg ${error ? 'bg-red-600 hover:bg-red-700 text-white shadow-red-500/30' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/30'}`}
                 >
-                  Acceder al Sistema
+                  {error ? 'Reintentar' : 'Iniciar Sesión Segura'}
                 </button>
               </form>
             </div>
